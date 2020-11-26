@@ -17,7 +17,10 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
-    width: 600,
+    width: "80vw",
+    maxWidth: 600,
+    maxHeight: "90vh",
+    overflow: "auto",
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -37,7 +40,26 @@ const Receta = ({ receta }) => {
     setOpen(false);
   };
   // extraer los valores de context
-  const { guardarIdReceta } = useContext(ModalContext);
+  const { infoReceta, guardarReceta, guardarIdReceta } = useContext(
+    ModalContext
+  );
+
+  // muestra y formatea ingredientes
+
+  const mostrarIngredientes = (informacion) => {
+    let ingredientes = [];
+    for (let i = 1; i < 16; i++) {
+      if (informacion[`strIngredient${i}`]) {
+        ingredientes.push(
+          <li>
+            {informacion[`strIngredient${i}`]} {informacion[`strMeasure${i}`]}
+          </li>
+        );
+      }
+    }
+
+    return ingredientes;
+  };
   return (
     <div className="col-md-4 mb-3">
       <div className="card">
@@ -63,11 +85,23 @@ const Receta = ({ receta }) => {
             open={open}
             onClose={() => {
               guardarIdReceta(null);
-              handleClose({});
+              guardarReceta({});
+              handleClose();
             }}
           >
             <div style={modalStyle} className={classes.paper}>
-              Modal
+              <h2>{infoReceta.strDrink}</h2>
+              <h3 className="mt-4">Instrucciones</h3>
+              <p>{infoReceta.strInstructions}</p>
+              <img
+                className="img-fluid my-4"
+                src={infoReceta.strDrinkThumb}
+                alt={infoReceta.strDrink}
+              />
+
+              <h3>Ingredientes y cantidades</h3>
+              {console.log(mostrarIngredientes(infoReceta))}
+              <ul>{mostrarIngredientes(infoReceta)}</ul>
             </div>
           </Modal>
         </div>
