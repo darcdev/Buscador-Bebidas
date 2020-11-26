@@ -1,4 +1,5 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
+import axios from "axios";
 
 export const RecetasContext = createContext();
 
@@ -8,9 +9,25 @@ const RecetasProvider = ({ children }) => {
     nombre: "",
     categoria: "",
   });
+  const [consultar, guardarConsultar] = useState(false);
+  const { nombre, categoria } = busqueda;
+
+  useEffect(() => {
+    if (consultar) {
+      const obtenerRecetas = async () => {
+        const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${nombre}&c=${categoria}`;
+        const resultado = await axios.get(url);
+        guardarRecetas(resultado.data.drinks);
+      };
+      obtenerRecetas();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busqueda]);
 
   let value = {
+    recetas,
     buscarRecetas,
+    guardarConsultar,
   };
   return (
     <RecetasContext.Provider value={value}>{children}</RecetasContext.Provider>

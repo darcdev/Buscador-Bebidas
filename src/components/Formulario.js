@@ -7,7 +7,7 @@ const Formulario = () => {
     categoria: "",
   });
   const { categorias } = useContext(CategoriasContext);
-  const { buscarRecetas } = useContext(RecetasContext);
+  const { buscarRecetas, guardarConsultar } = useContext(RecetasContext);
 
   const obtenerDatosReceta = (e) => {
     guardarBusqueda({
@@ -18,6 +18,7 @@ const Formulario = () => {
   const busquedaRecetas = (evt) => {
     evt.preventDefault();
     buscarRecetas(busqueda);
+    guardarConsultar(true);
   };
   return (
     <form className="col-12" onSubmit={busquedaRecetas}>
